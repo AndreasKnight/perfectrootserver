@@ -500,7 +500,6 @@ events {
 }
 
 http {
-		include 			/etc/nginx/naxsi_core.rules;
 		include       		/etc/nginx/mime.types;
 		default_type  		application/octet-stream;
 		server_tokens       off;
@@ -694,12 +693,6 @@ fi
 
 ln -s /etc/nginx/sites-available/${FQDN}.conf /etc/nginx/sites-enabled/${FQDN}.conf
 
-# Configure Naxsi
-cp -f ~/sources/naxsi-${NAXSI_VERSION}/naxsi_config/naxsi_core.rules /etc/nginx/
-cat > /etc/nginx/naxsi.rules <<END
-LearningMode;
-SecRulesEnabled;
-DeniedUrl "/RequestDenied";
 
 # Rules
 CheckRule "\$SQL >= 8" BLOCK;
@@ -1471,12 +1464,7 @@ server {
 				fastcgi_busy_buffers_size 256k;
 				fastcgi_temp_file_write_size 256k;
 			}
-
-			location / {
-			   	include /etc/nginx/naxsi.rules;
-				try_files \$uri \$uri/ /index.php?\$args;
-			}
-
+			
 			location ~ /\. {
 				deny all;
 				access_log off;
