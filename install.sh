@@ -694,15 +694,6 @@ fi
 ln -s /etc/nginx/sites-available/${FQDN}.conf /etc/nginx/sites-enabled/${FQDN}.conf
 
 
-# Rules
-CheckRule "\$SQL >= 8" BLOCK;
-CheckRule "\$RFI >= 8" BLOCK;
-CheckRule "\$TRAVERSAL >= 4" BLOCK;
-CheckRule "\$EVADE >= 4" BLOCK;
-CheckRule "\$XSS >= 8" BLOCK;
-END
-
-
 # Create a self-signed SSL certificate
 openssl ecparam -genkey -name secp384r1 -out /etc/nginx/ssl/${FQDN}.key
 openssl req -new -sha256 -key /etc/nginx/ssl/${FQDN}.key -out /etc/nginx/ssl/csr.pem -subj "/C=/ST=/L=/O=/OU=/CN=*.${FQDN}"
