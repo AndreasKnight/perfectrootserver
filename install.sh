@@ -5,10 +5,11 @@ set -e
 
 # The perfect rootserver
 # by interp / Zypr
+# edit by A+K
 # https://github.com/zypr/perfectrootserver
 #
 # Compatible with Debian 8.1 (jessie)
-#
+# without naxsi for nginx
 #
 # Check for latest/different version
 #
@@ -16,7 +17,7 @@ set -e
 # http://openssl.org/source/
 # http://www.openssh.com/
 # https://developers.google.com/speed/pagespeed/module/build_ngx_pagespeed_from_source
-# https://github.com/nbs-system/naxsi/releases/latest
+# https://github.com/nbs-system/naxsi/releases/latest - not included
 # https://www.openbl.org/lists.html
 #
 # Please note that older Nginx versions are not compatible with this script
@@ -25,7 +26,6 @@ NGINX_VERSION=1.9.4
 OPENSSL_VERSION=1.0.2d
 OPENSSH_VERSION=7.1
 NPS_VERSION=1.9.32.6
-NAXSI_VERSION=0.54rc3
 OPENBL_BLACKLIST=base_all.txt
 
 
@@ -276,10 +276,7 @@ tar -xzvf ${NPS_VERSION}.tar.gz
 cd ~/sources
 git clone https://github.com/maneulyori/nginx-http-auth-digest.git
 
-# Download & configure Naxsi
-cd ~/sources
-wget --no-check-certificate https://github.com/nbs-system/naxsi/archive/${NAXSI_VERSION}.tar.gz
-tar -xzvf ${NAXSI_VERSION}.tar.gz
+
 
 # Download Nginx
 cd ~/sources
@@ -388,7 +385,7 @@ sed -i '720s/.*/                (void) BIO_set_write_buffer_size(wbio, 16384);/'
 --with-openssl=$HOME/sources/openssl-${OPENSSL_VERSION} \
 --add-module=$HOME/sources/ngx_pagespeed-release-${NPS_VERSION}-beta \
 --add-module=$HOME/sources/nginx-http-auth-digest \
---add-module=$HOME/sources/naxsi-${NAXSI_VERSION}/naxsi_src
+
 
 # make the package
 make
@@ -642,10 +639,6 @@ server {
 				fastcgi_read_timeout 120s; 
 				fastcgi_busy_buffers_size 256k;
 				fastcgi_temp_file_write_size 256k;
-			}
-
-			location / {
-			   	include /etc/nginx/naxsi.rules;
 			}
 
 			location ~ /\. {
